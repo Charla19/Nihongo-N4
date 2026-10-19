@@ -5,6 +5,7 @@
   "description": "Carnet statique de vocabulaire N5/N4",
   "scripts": {
     "start": "node scripts/serve.js",
+    "seo:build": "node scripts/generate-seo.js",
     "test": "node --test"
   }
 }

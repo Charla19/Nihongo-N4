@@ -38,6 +38,13 @@
 .text-button{display:block;min-height:44px;margin:10px 0 0;padding:7px 0;border:0;background:transparent;color:var(--accent-dark);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 #account-signed-in .button{width:100%;margin-top:15px}
 .button:disabled{opacity:.55;cursor:wait}
+.explore-links{display:flex;flex-wrap:wrap;gap:10px 22px;margin:18px 0 0}.explore-links a{font-weight:700;text-underline-offset:3px}
+.seo-nav{display:flex;align-items:center;gap:6px}.seo-nav a{padding:8px 11px;border-radius:10px;color:var(--muted);font-weight:700;text-decoration:none}.seo-nav a:hover,.seo-nav a[aria-current=page]{background:var(--accent-soft);color:var(--accent-dark)}
+.seo-main{padding-top:35px}.seo-intro{max-width:810px;margin:0 0 45px}.seo-intro h1{font-size:clamp(34px,5vw,55px);margin:12px 0 16px}.seo-intro p{font-size:18px;color:var(--muted);max-width:700px}.seo-main h2{font-size:26px;margin-bottom:7px}.seo-note{color:var(--muted);max-width:780px;margin-bottom:20px}
+.seo-vocab-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;padding:0;margin:0}.seo-word{display:flex;flex-direction:column;gap:7px;min-width:0;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px}.seo-word [lang=ja]{font-size:24px;font-weight:700;line-height:1.7;overflow-wrap:anywhere}.seo-word rt,.seo-kanji-group rt{font-size:11px;color:var(--accent-dark);font-weight:500}.seo-word>span:last-child{font-size:15px;color:var(--muted)}
+.seo-kanji-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.seo-kanji-group{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}.seo-kanji-group h2{font-size:36px;color:var(--accent-dark);margin:0 0 5px}.seo-kanji-group ul{padding:0;list-style:none;margin:0}.seo-kanji-group li{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding:9px 0}.seo-kanji-group li [lang=ja]{font-size:19px;line-height:1.6;font-weight:600}.seo-kanji-group li span:last-child:not([lang=ja]){color:var(--muted);font-size:14px}.seo-next{margin:28px 0;color:var(--muted)}.seo-next a{font-weight:700}
+@media(max-width:850px){.seo-vocab-list,.seo-kanji-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.seo-nav{gap:0}.seo-nav a{font-size:12px;padding:7px}.seo-nav a:first-child{display:none}.seo-main{padding-top:25px}.seo-intro{margin-bottom:30px}.seo-intro p{font-size:16px}.seo-vocab-list,.seo-kanji-grid{grid-template-columns:1fr}.seo-word{padding:14px}.seo-main h2{font-size:23px}}
 @media(max-width:620px){
   .site-header .header-inner{gap:10px}
   .brand{font-size:18px}

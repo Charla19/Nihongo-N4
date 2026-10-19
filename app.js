@@ -177,6 +177,22 @@ function setupAccount() {
     $('#account-message').textContent = '';
     $('#account-email').focus();
   });
+  $('#account-code').addEventListener('input', event => {
+    event.target.value = event.target.value.replace(/\D/g, '').slice(0, 8);
+  });
+  $('#resend-code').addEventListener('click', async () => {
+    const button = $('#resend-code');
+    button.disabled = true;
+    $('#account-message').textContent = 'Envoi d’un nouveau code…';
+    try {
+      await cloud.sendCode(pendingEmail);
+      $('#account-code').value = '';
+      $('#account-message').textContent = 'Nouveau code envoyé. Utilise le plus récent.';
+      $('#account-code').focus();
+    } catch (error) {
+      $('#account-message').textContent = error.message || 'Impossible d’envoyer le code. Réessaie.';
+    } finally { button.disabled = false; }
+  });
   $('#code-form').addEventListener('submit', async event => {
     event.preventDefault();
     const token = $('#account-code').value.trim();
@@ -190,7 +206,9 @@ function setupAccount() {
       closeAccount();
       await syncProgress();
     } catch (error) {
-      $('#account-message').textContent = error.message || 'Code invalide ou expiré.';
+      $('#account-message').textContent = /token has expired or is invalid/i.test(error.message || '')
+        ? 'Code invalide ou expiré. Vérifie les huit chiffres ou demande un nouveau code.'
+        : error.message || 'Impossible de vérifier le code. Réessaie.';
     } finally { button.disabled = false; }
   });
   $('#sync-now').addEventListener('click', syncProgress);

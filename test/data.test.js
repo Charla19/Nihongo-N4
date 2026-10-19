@@ -44,3 +44,24 @@ test('les fichiers nécessaires à l’installation mobile sont présents', () =
   }
   new Function(fs.readFileSync(path.join(root, 'sw.js'), 'utf8'));
 });
+
+test('le formulaire accepte les huit chiffres des e-mails Supabase', () => {
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  assert.match(html, /id="account-code"[^>]*pattern="\[0-9\]\{8\}"[^>]*maxlength="8"/);
+});
+
+test('le sitemap contient des pages canoniques avec du contenu HTML consultable', () => {
+  const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
+  assert.match(fs.readFileSync(path.join(root, 'robots.txt'), 'utf8'), /Sitemap: https:\/\/nihongo\.charlamasy\.site\/sitemap\.xml/);
+  for (const [route, filename, sample] of [
+    ['/', 'index.html', 'Reconnais les mots'],
+    ['/vocabulaire', 'vocabulaire.html', '安心'],
+    ['/kanji', 'kanji.html', '医学']
+  ]) {
+    const url = `https://nihongo.charlamasy.site${route}`;
+    assert.ok(sitemap.includes(`<loc>${url}</loc>`));
+    const html = fs.readFileSync(path.join(root, filename), 'utf8');
+    assert.ok(html.includes(`<link rel="canonical" href="${url}">`));
+    assert.ok(html.includes(sample));
+  }
+});

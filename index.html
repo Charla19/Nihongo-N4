@@ -7,8 +7,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Nihongo N4">
-  <meta name="description" content="Révise les mots et les associations de kanji utiles au JLPT N4, sur mobile et à ton rythme.">
+  <meta name="description" content="Révise 1 304 mots N5 et N4, leurs lectures et leurs associations de kanji pour le JLPT N4. Progression sur mobile, avec ou sans compte.">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="canonical" href="https://nihongo.charlamasy.site/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Nihongo N4">
+  <meta property="og:title" content="Nihongo N4 — vocabulaire et kanji en contexte">
+  <meta property="og:description" content="Révise 1 304 mots N5 et N4, leurs lectures et leurs associations de kanji pour le JLPT N4.">
+  <meta property="og:url" content="https://nihongo.charlamasy.site/">
+  <meta property="og:image" content="https://nihongo.charlamasy.site/icons/icon-512.png">
+  <meta name="twitter:card" content="summary">
   <title>Nihongo N4 — les mots avant les kanji isolés</title>
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
@@ -27,13 +36,17 @@
     </div>
   </header>
 
-  <main id="main" class="shell">
+  <main id="main" class="shell" itemscope itemtype="https://schema.org/WebApplication">
+    <meta itemprop="name" content="Nihongo N4">
+    <meta itemprop="applicationCategory" content="EducationalApplication">
+    <meta itemprop="operatingSystem" content="Web, Android, iOS">
+    <meta itemprop="description" content="Application gratuite de révision du vocabulaire et des kanji utiles au JLPT N4.">
     <section id="accueil" class="view active" aria-labelledby="home-title">
       <div class="hero">
         <div class="hero-copy">
           <span class="eyebrow">TON CARNET DE RÉVISION</span>
           <h1 id="home-title">Reconnais les mots.<br><em>Comprends le texte.</em></h1>
-          <p>Travaille les associations de kanji que tu verras vraiment dans tes lectures N4. Commence par une sélection en français, puis explore tout le vocabulaire N5 et N4.</p>
+          <p>Travaille les associations de kanji que tu verras vraiment dans tes lectures N4. Commence par une sélection en français, puis explore tout le vocabulaire N5 et N4. L’application est <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><span>gratuite</span><meta itemprop="price" content="0"><meta itemprop="priceCurrency" content="EUR"></span> et utilisable sans compte.</p>
           <div class="hero-actions"><button id="start-button" class="button primary" type="button">Commencer la révision <span aria-hidden="true">→</span></button><button id="browse-button" class="button secondary" type="button">Voir tous les mots</button></div>
         </div>
         <div class="hero-symbol" aria-hidden="true"><span>言葉</span><small>ことば · les mots</small></div>
@@ -58,6 +71,7 @@
         <article class="info-card"><span class="step">02</span><h2>Révise ce qui bloque</h2><p>Coche les mots acquis. Utilise l’app sans compte ou connecte-toi pour retrouver ta progression.</p></article>
         <article class="info-card"><span class="step">03</span><h2>Retourne au texte</h2><p>Après une série de mots, retrouve-les dans une lecture ou un exercice chronométré.</p></article>
       </div>
+      <div class="explore-links"><a href="/vocabulaire">Découvrir les mots N4 traduits en français <span aria-hidden="true">→</span></a><a href="/kanji">Explorer les kanji à travers les mots <span aria-hidden="true">→</span></a></div>
       <aside class="notice"><strong>À savoir</strong> Le JLPT ne publie pas de liste officielle exhaustive. Ce corpus est une base de travail issue d’OpenJLPT, pas une promesse sur le contenu du prochain examen.</aside>
     </section>
 
@@ -112,10 +126,11 @@
             <button class="button primary account-submit" type="submit">Recevoir un code</button>
           </form>
           <form id="code-form" hidden>
-            <p>Entre le code à six chiffres envoyé à <strong id="code-recipient"></strong>.</p>
+            <p>Entre le code à huit chiffres envoyé à <strong id="code-recipient"></strong>.</p>
             <label for="account-code">Code de connexion</label>
-            <input id="account-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
+            <input id="account-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{8}" maxlength="8" required placeholder="00000000">
             <button class="button primary account-submit" type="submit">Se connecter</button>
+            <button id="resend-code" type="button" class="text-button">Recevoir un nouveau code</button>
             <button id="change-email" type="button" class="text-button">Changer d’adresse</button>
           </form>
           <p class="account-hint">Tu peux continuer sans compte. Tes mots restent alors sur cet appareil.</p>

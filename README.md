@@ -14,6 +14,8 @@ Le site est aussi une PWA : une fois chargé sur HTTPS, il peut être installé 
 
 Le code utilise uniquement l’URL du projet et la clé **publishable** de Supabase. La clé Resend et toute clé Supabase `service_role` ou `secret` restent hors du dépôt. La table `public.word_progress` doit avoir ses politiques RLS limitées à `auth.uid() = user_id` pour `select`, `insert` et `update`. La configuration SMTP Resend et les modèles d’e-mail avec `{{ .Token }}` se font dans le tableau de bord Supabase.
 
+Le formulaire accepte les codes à **huit chiffres** configurés dans ce projet Supabase. Si la longueur du code change dans Supabase, mettre à jour la validation et le texte dans `index.html`.
+
 ## Lancer en local
 
 Node.js 20 ou plus récent suffit :
@@ -29,6 +31,12 @@ Ouvrir `http://127.0.0.1:4173`. L’ouverture directe de `index.html` en `file:/
 ```sh
 npm test
 ```
+
+## Référencement
+
+`robots.txt` indique le sitemap. `sitemap.xml` contient uniquement les trois URL canoniques réellement consultables : l’accueil, `/vocabulaire` et `/kanji`. Les deux dernières sont des pages HTML avec du contenu N4 visible sans JavaScript, car les vues `#vocabulaire` et `#kanji` de l’application ne constituent pas des pages distinctes pour Google. Les pages HTML contiennent des titres, descriptions et métadonnées sociales propres. L’accueil indique son URL canonique et décrit l’application avec les données structurées `WebApplication`.
+
+Après une modification du corpus, régénérer les pages et le sitemap avec `npm run seo:build` (ou `node scripts/generate-seo.js`), puis les inclure dans le commit. Après déploiement, soumettre `https://nihongo.charlamasy.site/sitemap.xml` dans Google Search Console et inspecter les trois URL. L’indexation dépend de Google et peut prendre du temps.
 
 ## Déployer sur Vercel
 

@@ -39,7 +39,7 @@ test('email code creates a persistent session and sends progress only as the sig
     throw new Error('Unexpected request');
   });
   await cloud.sendCode('a@example.com');
-  await cloud.verifyCode('a@example.com', '123456');
+  await cloud.verifyCode('a@example.com', '12345678');
   await cloud.saveProgress([['word-1', true]]);
   await cloud.getProgress();
 
