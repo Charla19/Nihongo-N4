@@ -14,6 +14,7 @@
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./cloud.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -22,6 +23,7 @@
     <div class="shell header-inner">
       <a class="brand" href="#accueil" aria-label="Nihongo N4, accueil"><span class="brand-mark" aria-hidden="true">日</span><span>Nihongo<span class="brand-accent"> N4</span></span></a>
       <nav class="desktop-nav" aria-label="Navigation principale"><button type="button" data-view="accueil" class="active">Accueil</button><button type="button" data-view="vocabulaire">Vocabulaire</button><button type="button" data-view="kanji">Kanji</button></nav>
+      <button id="account-button" class="account-button" type="button">Compte</button>
     </div>
   </header>
 
@@ -39,8 +41,12 @@
       <div class="summary-grid" aria-label="Contenu du carnet">
         <div class="summary-card"><strong id="total-count">1 304</strong><span>mots N5 + N4</span></div>
         <div class="summary-card"><strong id="priority-count">145</strong><span>traductions françaises</span></div>
-        <div class="summary-card"><strong id="progress-count">0</strong><span>mots acquis sur cet appareil</span></div>
+        <div class="summary-card"><strong id="progress-count">0</strong><span>mots acquis</span></div>
       </div>
+      <section class="sync-card" aria-label="Sauvegarde de la progression">
+        <div><strong id="account-summary">Progression sur cet appareil</strong><p id="sync-status" role="status" aria-live="polite">Connecte-toi pour la retrouver sur tes autres appareils.</p></div>
+        <button id="sync-action" type="button" class="button secondary">Sauvegarder en ligne</button>
+      </section>
       <section class="install-card" aria-labelledby="install-title">
         <img src="./icons/icon-192.png" width="64" height="64" alt="" class="install-icon">
         <div class="install-copy"><h2 id="install-title">Emporte Nihongo avec toi</h2><p>Installe le site sur ton écran d’accueil pour le retrouver comme une application et revoir tes mots même hors ligne.</p><p id="install-status" class="install-status" role="status" aria-live="polite"></p></div>
@@ -49,7 +55,7 @@
       <details class="install-help"><summary>Comment l’installer sur mon téléphone ?</summary><div><p><b>Android · Chrome :</b> ouvre ce site dans Chrome, puis menu ⋮ → « Installer l’application » ou « Installer et créer un raccourci ».</p><p><b>iPhone · Safari :</b> ouvre ce site dans Safari, touche Partager, puis « Sur l’écran d’accueil ».</p><p>Si l’option manque, vérifie que tu es sur l’adresse HTTPS du site et recharge la page après le prochain déploiement.</p></div></details>
       <div class="intro-grid">
         <article class="info-card"><span class="step">01</span><h2>Apprends le mot entier</h2><p>Lis <b>交通（こうつう）</b> comme « transport », puis repère 交 et 通 dans d’autres mots.</p></article>
-        <article class="info-card"><span class="step">02</span><h2>Révise ce qui bloque</h2><p>Coche les mots acquis. Ton suivi reste dans ce navigateur et ne demande aucun compte.</p></article>
+        <article class="info-card"><span class="step">02</span><h2>Révise ce qui bloque</h2><p>Coche les mots acquis. Utilise l’app sans compte ou connecte-toi pour retrouver ta progression.</p></article>
         <article class="info-card"><span class="step">03</span><h2>Retourne au texte</h2><p>Après une série de mots, retrouve-les dans une lecture ou un exercice chronométré.</p></article>
       </div>
       <aside class="notice"><strong>À savoir</strong> Le JLPT ne publie pas de liste officielle exhaustive. Ce corpus est une base de travail issue d’OpenJLPT, pas une promesse sur le contenu du prochain examen.</aside>
@@ -91,6 +97,37 @@
       <div class="dialog-header"><div><span class="eyebrow">MOTS ASSOCIÉS</span><h2 id="dialog-title"></h2></div><button id="dialog-close" class="icon-button" type="button" aria-label="Fermer la fiche">×</button></div>
       <p id="dialog-subtitle" class="dialog-subtitle"></p>
       <div id="dialog-list" class="dialog-list"></div>
+    </div>
+  </dialog>
+
+  <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-title">
+    <div class="account-dialog-shell">
+      <div class="account-dialog-header"><div><span class="eyebrow">PROGRESSION</span><h2 id="account-title">Ton compte</h2></div><button id="account-close" class="icon-button" type="button" aria-label="Fermer">×</button></div>
+      <div class="account-dialog-body">
+        <div id="account-guest">
+          <p>Un code envoyé par e-mail suffit pour sauvegarder tes mots et les retrouver sur un autre appareil.</p>
+          <form id="email-form">
+            <label for="account-email">Adresse e-mail</label>
+            <input id="account-email" type="email" inputmode="email" autocomplete="email" required placeholder="toi@exemple.com">
+            <button class="button primary account-submit" type="submit">Recevoir un code</button>
+          </form>
+          <form id="code-form" hidden>
+            <p>Entre le code à six chiffres envoyé à <strong id="code-recipient"></strong>.</p>
+            <label for="account-code">Code de connexion</label>
+            <input id="account-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
+            <button class="button primary account-submit" type="submit">Se connecter</button>
+            <button id="change-email" type="button" class="text-button">Changer d’adresse</button>
+          </form>
+          <p class="account-hint">Tu peux continuer sans compte. Tes mots restent alors sur cet appareil.</p>
+        </div>
+        <div id="account-signed-in" hidden>
+          <p>Connecté avec <strong id="account-address"></strong></p>
+          <p id="account-sync-detail" class="account-hint"></p>
+          <button id="sync-now" class="button secondary" type="button">Synchroniser maintenant</button>
+          <button id="account-sign-out" class="text-button" type="button">Se déconnecter</button>
+        </div>
+        <p id="account-message" class="account-message" role="status" aria-live="polite"></p>
+      </div>
     </div>
   </dialog>
 

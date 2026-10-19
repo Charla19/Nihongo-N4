@@ -2,8 +2,15 @@
 
 const state = { words: [], kanji: [], done: new Set(), wordLimit: 48, kanjiLimit: 120, activeKanji: null, returnFocus: null };
 const KEY = 'nihongo-n4-progress-v1';
+const ACCOUNT_KEY = 'nihongo-n4-account-v1-';
+const PENDING_KEY = 'nihongo-n4-pending-v1-';
 const $ = (selector) => document.querySelector(selector);
+const cloud = new NihongoCloud();
 let installPrompt = null;
+let pendingEmail = '';
+let syncing = false;
+let syncTimer = null;
+let verifiedCloudThisSession = false;
 
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
@@ -17,15 +24,189 @@ window.addEventListener('appinstalled', () => {
   $('#install-status').textContent = 'Nihongo N4 est installé sur cet appareil.';
 });
 
-function loadProgress() {
+function storedSet(key) {
   try {
-    const saved = JSON.parse(localStorage.getItem(KEY) || '[]');
-    if (Array.isArray(saved)) state.done = new Set(saved.filter(x => typeof x === 'string'));
-  } catch { state.done = new Set(); }
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
+    return new Set(Array.isArray(saved) ? saved.filter(x => typeof x === 'string') : []);
+  } catch { return new Set(); }
+}
+
+function storedPending(userId) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PENDING_KEY + userId) || '{}');
+    return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
+  } catch { return {}; }
+}
+
+function savePending(userId, pending) {
+  try { localStorage.setItem(PENDING_KEY + userId, JSON.stringify(pending)); } catch { /* Storage may be unavailable. */ }
+}
+
+function loadProgress() {
+  state.done = storedSet(KEY);
 }
 
 function saveProgress() {
-  try { localStorage.setItem(KEY, JSON.stringify([...state.done])); } catch { /* Browser storage may be unavailable. */ }
+  const key = cloud.user ? ACCOUNT_KEY + cloud.user.id : KEY;
+  try { localStorage.setItem(key, JSON.stringify([...state.done])); } catch { /* Browser storage may be unavailable. */ }
+}
+
+function activateAccount() {
+  const userId = cloud.user.id;
+  verifiedCloudThisSession = false;
+  let hasAccountCache = false;
+  try { hasAccountCache = localStorage.getItem(ACCOUNT_KEY + userId) !== null; } catch { /* Use guest progress below. */ }
+  state.done = hasAccountCache ? storedSet(ACCOUNT_KEY + userId) : storedSet(KEY);
+  if (!hasAccountCache) {
+    const pending = storedPending(userId);
+    state.done.forEach(id => { pending[id] = true; });
+    savePending(userId, pending);
+  }
+  saveProgress();
+  updateAccountUI();
+  renderWords();
+}
+
+function updateAccountUI(message = '') {
+  const user = cloud.user;
+  const queued = user ? Object.keys(storedPending(user.id)).length : 0;
+  $('#account-button').textContent = user ? 'Mon compte' : 'Connexion';
+  $('#account-summary').textContent = user ? 'Progression liée à ton compte' : 'Progression sur cet appareil';
+  $('#sync-status').textContent = message || (user
+    ? (!navigator.onLine ? 'Hors ligne · les changements seront envoyés au retour du réseau.' : queued ? `${queued} changement${queued > 1 ? 's' : ''} à synchroniser.` : verifiedCloudThisSession ? 'Progression synchronisée entre tes appareils.' : 'Vérification de la progression en ligne…')
+    : 'Connecte-toi pour la retrouver sur tes autres appareils.');
+  $('#sync-action').textContent = user ? 'Voir mon compte' : 'Sauvegarder en ligne';
+  $('#account-guest').hidden = Boolean(user);
+  $('#account-signed-in').hidden = !user;
+  if (user) {
+    $('#account-address').textContent = user.email || '';
+    $('#account-sync-detail').textContent = $('#sync-status').textContent;
+  }
+}
+
+function scheduleSync() {
+  if (!cloud.user || !navigator.onLine) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncProgress, 700);
+}
+
+async function syncProgress() {
+  if (!cloud.user || !navigator.onLine || syncing) return;
+  syncing = true;
+  let success = false;
+  const userId = cloud.user.id;
+  updateAccountUI('Synchronisation en cours…');
+  try {
+    const rows = await cloud.getProgress();
+    if (!cloud.user || cloud.user.id !== userId) return;
+    const merged = new Set(rows.filter(row => row.learned).map(row => row.word_id));
+    const pending = storedPending(userId);
+    for (const [id, learned] of Object.entries(pending)) {
+      if (learned) merged.add(id);
+      else merged.delete(id);
+    }
+    state.done = merged;
+    saveProgress();
+    renderWords();
+    const changes = Object.entries(pending).filter(([id, learned]) => typeof id === 'string' && typeof learned === 'boolean');
+    if (changes.length) {
+      await cloud.saveProgress(changes);
+      const current = storedPending(userId);
+      for (const [id, learned] of changes) {
+        if (current[id] === learned) delete current[id];
+      }
+      savePending(userId, current);
+    }
+    success = true;
+    verifiedCloudThisSession = true;
+    if (cloud.user?.id === userId) updateAccountUI('Progression synchronisée.');
+  } catch (error) {
+    console.error('Synchronisation :', error);
+    updateAccountUI('Synchronisation indisponible. Tes changements restent sur cet appareil.');
+  } finally {
+    syncing = false;
+    if (success && cloud.user?.id === userId && navigator.onLine && Object.keys(storedPending(userId)).length) scheduleSync();
+  }
+}
+
+function openAccount() {
+  updateAccountUI();
+  $('#account-message').textContent = '';
+  $('#account-dialog').showModal();
+  document.body.classList.add('modal-open');
+  (cloud.user ? $('#sync-now') : $('#account-email')).focus();
+}
+
+function closeAccount() {
+  $('#account-dialog').close();
+}
+
+function setupAccount() {
+  $('#account-button').addEventListener('click', openAccount);
+  $('#sync-action').addEventListener('click', openAccount);
+  $('#account-close').addEventListener('click', closeAccount);
+  $('#account-dialog').addEventListener('click', event => {
+    if (event.target === $('#account-dialog')) closeAccount();
+  });
+  $('#account-dialog').addEventListener('close', () => {
+    document.body.classList.remove('modal-open');
+    $('#account-button').focus();
+  });
+  $('#email-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const email = $('#account-email').value.trim().toLowerCase();
+    if (!email) return;
+    const button = $('#email-form button[type=submit]');
+    button.disabled = true;
+    $('#account-message').textContent = 'Envoi du code…';
+    try {
+      await cloud.sendCode(email);
+      pendingEmail = email;
+      $('#code-recipient').textContent = email;
+      $('#email-form').hidden = true;
+      $('#code-form').hidden = false;
+      $('#account-message').textContent = 'Code envoyé. Vérifie aussi les spams si nécessaire.';
+      $('#account-code').focus();
+    } catch (error) {
+      $('#account-message').textContent = error.message || 'Impossible d’envoyer le code. Réessaie.';
+    } finally { button.disabled = false; }
+  });
+  $('#change-email').addEventListener('click', () => {
+    $('#code-form').hidden = true;
+    $('#email-form').hidden = false;
+    $('#account-message').textContent = '';
+    $('#account-email').focus();
+  });
+  $('#code-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const token = $('#account-code').value.trim();
+    const button = $('#code-form button[type=submit]');
+    button.disabled = true;
+    $('#account-message').textContent = 'Connexion…';
+    try {
+      await cloud.verifyCode(pendingEmail, token);
+      activateAccount();
+      $('#account-message').textContent = 'Connecté. Ta progression est en cours de synchronisation.';
+      closeAccount();
+      await syncProgress();
+    } catch (error) {
+      $('#account-message').textContent = error.message || 'Code invalide ou expiré.';
+    } finally { button.disabled = false; }
+  });
+  $('#sync-now').addEventListener('click', syncProgress);
+  $('#account-sign-out').addEventListener('click', async () => {
+    await cloud.signOut();
+    verifiedCloudThisSession = false;
+    loadProgress();
+    updateAccountUI();
+    renderWords();
+    closeAccount();
+  });
+  window.addEventListener('online', () => { updateAccountUI(); scheduleSync(); });
+  window.addEventListener('offline', () => updateAccountUI());
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) scheduleSync();
+  });
 }
 
 function showView(name, updateHash = true) {
@@ -134,6 +315,11 @@ function validateWords(payload) {
 
 async function init() {
   loadProgress();
+  setupAccount();
+  if (cloud.user) {
+    activateAccount();
+    scheduleSync();
+  } else updateAccountUI();
   if (window.matchMedia('(display-mode: standalone)').matches) {
     $('#install-status').textContent = 'Application installée sur cet appareil.';
   }
@@ -169,6 +355,13 @@ async function init() {
     const id = button.dataset.id;
     state.done.has(id) ? state.done.delete(id) : state.done.add(id);
     saveProgress();
+    if (cloud.user) {
+      const pending = storedPending(cloud.user.id);
+      pending[id] = state.done.has(id);
+      savePending(cloud.user.id, pending);
+      updateAccountUI();
+      scheduleSync();
+    }
     renderWords();
     if ($('#kanji-dialog').open && state.activeKanji) {
       const oldScroll = $('#dialog-list').scrollTop;

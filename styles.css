@@ -14,3 +14,38 @@
 .install-help{background:transparent;border:0;margin:0 0 24px;padding:0 4px;color:var(--muted);font-size:14px}.install-help summary{color:var(--accent-dark);cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}.install-help summary::marker{color:var(--accent)}.install-help div{max-width:680px;padding:4px 0 0 18px}.install-help p{margin:0 0 9px}
 .copyright{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px}.copyright a{color:var(--accent-dark)}
 @media(max-width:620px){.install-card{align-items:flex-start;flex-wrap:wrap;gap:13px;padding:15px}.install-icon{width:52px;height:52px}.install-copy{flex-basis:calc(100% - 70px)}.install-card .button{width:100%}}
+
+.account-button{min-height:44px;padding:8px 15px;border:1px solid #c9b2e3;border-radius:11px;background:var(--surface);color:var(--accent-dark);font-weight:700;white-space:nowrap}
+.account-button:hover{background:var(--accent-soft)}
+.sync-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 24px;padding:18px 20px;border:1px solid #ded2eb;border-radius:var(--radius);background:#f6f2fc}
+.sync-card strong{display:block;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px}
+.sync-card p{margin:3px 0 0;color:var(--muted);font-size:14px}
+.sync-card .button{flex:none}
+.account-dialog{width:min(440px,calc(100% - 28px))}
+.account-dialog-shell{display:flex;flex-direction:column;max-height:inherit}
+.account-dialog-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:24px 24px 8px}
+.account-dialog-header h2{font-size:27px;line-height:1.2;margin:5px 0 0}
+.account-dialog-body{overflow:auto;padding:8px 24px 26px}
+.account-dialog-body p{color:var(--muted);font-size:15px}
+.account-dialog-body strong{overflow-wrap:anywhere}
+.account-dialog-body form{margin:22px 0 0}
+.account-dialog-body label{display:block;margin:0 0 6px;font-size:14px;font-weight:700}
+.account-dialog-body input{display:block;width:100%;min-height:50px;padding:11px 13px;border:1px solid #c9b2e3;border-radius:11px;background:#fff;color:var(--ink);font-size:16px}
+.account-dialog-body input:focus{outline:3px solid #aa86d7;outline-offset:2px}
+.account-submit{width:100%;margin-top:14px}
+.account-hint{margin:17px 0 0;font-size:13px!important}
+.account-message{min-height:1.5em;margin:14px 0 0;color:var(--accent-dark)!important;font-weight:700}
+.text-button{display:block;min-height:44px;margin:10px 0 0;padding:7px 0;border:0;background:transparent;color:var(--accent-dark);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+#account-signed-in .button{width:100%;margin-top:15px}
+.button:disabled{opacity:.55;cursor:wait}
+@media(max-width:620px){
+  .site-header .header-inner{gap:10px}
+  .brand{font-size:18px}
+  .account-button{padding:8px 11px;font-size:13px}
+  .sync-card{align-items:stretch;flex-direction:column;padding:16px;gap:12px}
+  .sync-card .button{width:100%}
+  .account-dialog{inset:auto 0 0;width:100%;height:auto;max-height:min(88dvh,760px);margin:0;border-radius:22px 22px 0 0}
+  .account-dialog-shell{max-height:min(88dvh,760px)}
+  .account-dialog-header{padding:22px 20px 8px}
+  .account-dialog-body{padding:8px 20px calc(24px + env(safe-area-inset-bottom))}
+}
