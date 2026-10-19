@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f4ee">
+  <meta name="description" content="Révise les mots et les associations de kanji utiles au JLPT N4, sur mobile et à ton rythme.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Nihongo N4 — les mots avant les kanji isolés</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#accueil" aria-label="Nihongo N4, accueil"><span class="brand-mark" aria-hidden="true">日</span><span>Nihongo<span class="brand-accent"> N4</span></span></a>
+      <nav class="desktop-nav" aria-label="Navigation principale"><button type="button" data-view="accueil" class="active">Accueil</button><button type="button" data-view="vocabulaire">Vocabulaire</button><button type="button" data-view="kanji">Kanji</button></nav>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <section id="accueil" class="view active" aria-labelledby="home-title">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">TON CARNET DE RÉVISION</span>
+          <h1 id="home-title">Reconnais les mots.<br><em>Comprends le texte.</em></h1>
+          <p>Travaille les associations de kanji que tu verras vraiment dans tes lectures N4. Commence par une sélection en français, puis explore tout le vocabulaire N5 et N4.</p>
+          <div class="hero-actions"><button id="start-button" class="button primary" type="button">Commencer la révision <span aria-hidden="true">→</span></button><button id="browse-button" class="button secondary" type="button">Voir tous les mots</button></div>
+        </div>
+        <div class="hero-symbol" aria-hidden="true"><span>言葉</span><small>ことば · les mots</small></div>
+      </div>
+      <div class="summary-grid" aria-label="Contenu du carnet">
+        <div class="summary-card"><strong id="total-count">1 304</strong><span>mots N5 + N4</span></div>
+        <div class="summary-card"><strong id="priority-count">145</strong><span>traductions françaises</span></div>
+        <div class="summary-card"><strong id="progress-count">0</strong><span>mots acquis sur cet appareil</span></div>
+      </div>
+      <div class="intro-grid">
+        <article class="info-card"><span class="step">01</span><h2>Apprends le mot entier</h2><p>Lis <b>交通（こうつう）</b> comme « transport », puis repère 交 et 通 dans d’autres mots.</p></article>
+        <article class="info-card"><span class="step">02</span><h2>Révise ce qui bloque</h2><p>Coche les mots acquis. Ton suivi reste dans ce navigateur et ne demande aucun compte.</p></article>
+        <article class="info-card"><span class="step">03</span><h2>Retourne au texte</h2><p>Après une série de mots, retrouve-les dans une lecture ou un exercice chronométré.</p></article>
+      </div>
+      <aside class="notice"><strong>À savoir</strong> Le JLPT ne publie pas de liste officielle exhaustive. Ce corpus est une base de travail issue d’OpenJLPT, pas une promesse sur le contenu du prochain examen.</aside>
+    </section>
+
+    <section id="vocabulaire" class="view" aria-labelledby="vocab-title">
+      <div class="page-heading"><div><span class="eyebrow">RÉVISION</span><h1 id="vocab-title">Les mots à connaître</h1><p>Lis le kanji, prononce la lecture, puis vérifie le sens.</p></div><div id="result-count" class="result-count" role="status" aria-live="polite"></div></div>
+      <div class="toolbar">
+        <label class="search-field"><span class="sr-only">Rechercher un mot</span><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="search" type="search" autocomplete="off" placeholder="Chercher un mot, une lecture, un sens…"></label>
+        <div class="filter-row" aria-label="Filtres de vocabulaire">
+          <label>Liste<select id="collection"><option value="priority">Priorité en français</option><option value="all">Tout le vocabulaire</option></select></label>
+          <label>Niveau<select id="level"><option value="all">N5 + N4</option><option value="N4">N4</option><option value="N5">N5</option></select></label>
+          <label>Écriture<select id="writing"><option value="all">Toutes</option><option value="compound">Composés de kanji</option><option value="kanji">Avec kanji</option><option value="kana">Kana uniquement</option></select></label>
+          <label>Suivi<select id="status"><option value="all">Tous</option><option value="todo">À revoir</option><option value="done">Acquis</option></select></label>
+        </div>
+      </div>
+      <p id="loading" class="loading" role="status">Chargement des mots…</p>
+      <div id="word-list" class="word-grid"></div>
+      <div id="empty" class="empty-state" hidden><h2>Aucun mot trouvé</h2><p>Essaie un autre terme ou enlève un filtre.</p><button id="reset-filters" class="button secondary" type="button">Réinitialiser les filtres</button></div>
+      <button id="show-more" class="button more-button" type="button" hidden>Afficher plus de mots</button>
+    </section>
+
+    <section id="kanji" class="view" aria-labelledby="kanji-title">
+      <div class="page-heading"><div><span class="eyebrow">EXPLORER</span><h1 id="kanji-title">Les kanji dans les mots</h1><p>Touche un kanji pour ouvrir ses mots dans une fiche. Tu restes à ta place dans la liste.</p></div><div id="kanji-count" class="result-count"></div></div>
+      <label class="search-field kanji-search"><span class="sr-only">Rechercher un kanji</span><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="kanji-search" type="search" autocomplete="off" placeholder="Chercher un kanji…"></label>
+      <div id="kanji-grid" class="kanji-grid"></div>
+      <button id="more-kanji" class="button more-button" type="button" hidden>Afficher plus de kanji</button>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="Navigation principale">
+    <button type="button" data-view="accueil" class="active"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>Accueil</span></button>
+    <button type="button" data-view="vocabulaire"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h7a3 3 0 0 1 3 3v13H7a3 3 0 0 0-3 1z"/><path d="M20 4h-3a3 3 0 0 0-3 3v13h3a3 3 0 0 1 3 1z"/></svg><span>Mots</span></button>
+    <button type="button" data-view="kanji"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M6 12h12M9 4v16M15 4v16M4 20h16"/></svg><span>Kanji</span></button>
+  </nav>
+
+  <dialog id="kanji-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-shell">
+      <div class="dialog-header"><div><span class="eyebrow">MOTS ASSOCIÉS</span><h2 id="dialog-title"></h2></div><button id="dialog-close" class="icon-button" type="button" aria-label="Fermer la fiche">×</button></div>
+      <p id="dialog-subtitle" class="dialog-subtitle"></p>
+      <div id="dialog-list" class="dialog-list"></div>
+    </div>
+  </dialog>
+
+  <footer class="site-footer shell"><p>Créé pour réviser le JLPT N4. <a href="https://www.jlpt.jp/e/reference/faq.html" target="_blank" rel="noopener noreferrer">FAQ officielle JLPT</a> · <a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener noreferrer">Données OpenJLPT</a> (CC BY-SA 4.0). Les traductions françaises sont une sélection de révision. Projet indépendant.</p></footer>
+</body>
+</html>
