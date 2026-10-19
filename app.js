@@ -3,6 +3,19 @@
 const state = { words: [], kanji: [], done: new Set(), wordLimit: 48, kanjiLimit: 120, activeKanji: null, returnFocus: null };
 const KEY = 'nihongo-n4-progress-v1';
 const $ = (selector) => document.querySelector(selector);
+let installPrompt = null;
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installPrompt = event;
+  $('#install-button').hidden = false;
+});
+
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  $('#install-button').hidden = true;
+  $('#install-status').textContent = 'Nihongo N4 est installé sur cet appareil.';
+});
 
 function loadProgress() {
   try {
@@ -121,6 +134,20 @@ function validateWords(payload) {
 
 async function init() {
   loadProgress();
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    $('#install-status').textContent = 'Application installée sur cet appareil.';
+  }
+  $('#install-button').addEventListener('click', async () => {
+    if (!installPrompt) return;
+    const prompt = installPrompt;
+    installPrompt = null;
+    $('#install-button').hidden = true;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome !== 'accepted') {
+      $('#install-status').textContent = 'Tu peux aussi installer l’application depuis le menu de Chrome.';
+    }
+  });
   showView(location.hash.slice(1), false);
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
   $('.brand').addEventListener('click', event => { event.preventDefault(); showView('accueil'); });
@@ -172,3 +199,9 @@ async function init() {
 }
 
 init();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(error => console.warn('Mode hors ligne indisponible :', error));
+  });
+}

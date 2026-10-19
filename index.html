@@ -3,10 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f6f4ee">
+  <meta name="theme-color" content="#624095">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nihongo N4">
   <meta name="description" content="Révise les mots et les associations de kanji utiles au JLPT N4, sur mobile et à ton rythme.">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Nihongo N4 — les mots avant les kanji isolés</title>
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
 </head>
@@ -35,6 +41,12 @@
         <div class="summary-card"><strong id="priority-count">145</strong><span>traductions françaises</span></div>
         <div class="summary-card"><strong id="progress-count">0</strong><span>mots acquis sur cet appareil</span></div>
       </div>
+      <section class="install-card" aria-labelledby="install-title">
+        <img src="./icons/icon-192.png" width="64" height="64" alt="" class="install-icon">
+        <div class="install-copy"><h2 id="install-title">Emporte Nihongo avec toi</h2><p>Installe le site sur ton écran d’accueil pour le retrouver comme une application et revoir tes mots même hors ligne.</p><p id="install-status" class="install-status" role="status" aria-live="polite"></p></div>
+        <button id="install-button" class="button secondary" type="button" hidden>Installer l’application</button>
+      </section>
+      <details class="install-help"><summary>Comment l’installer sur mon téléphone ?</summary><div><p><b>Android · Chrome :</b> ouvre ce site dans Chrome, puis menu ⋮ → « Installer l’application » ou « Installer et créer un raccourci ».</p><p><b>iPhone · Safari :</b> ouvre ce site dans Safari, touche Partager, puis « Sur l’écran d’accueil ».</p><p>Si l’option manque, vérifie que tu es sur l’adresse HTTPS du site et recharge la page après le prochain déploiement.</p></div></details>
       <div class="intro-grid">
         <article class="info-card"><span class="step">01</span><h2>Apprends le mot entier</h2><p>Lis <b>交通（こうつう）</b> comme « transport », puis repère 交 et 通 dans d’autres mots.</p></article>
         <article class="info-card"><span class="step">02</span><h2>Révise ce qui bloque</h2><p>Coche les mots acquis. Ton suivi reste dans ce navigateur et ne demande aucun compte.</p></article>
@@ -82,6 +94,6 @@
     </div>
   </dialog>
 
-  <footer class="site-footer shell"><p>Créé pour réviser le JLPT N4. <a href="https://www.jlpt.jp/e/reference/faq.html" target="_blank" rel="noopener noreferrer">FAQ officielle JLPT</a> · <a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener noreferrer">Données OpenJLPT</a> (CC BY-SA 4.0). Les traductions françaises sont une sélection de révision. Projet indépendant.</p></footer>
+  <footer class="site-footer shell"><p class="copyright">© 2026 <a href="https://charlamasy.site" target="_blank" rel="noopener noreferrer">Charla Masy</a></p><p>Créé pour réviser le JLPT N4. <a href="https://www.jlpt.jp/e/reference/faq.html" target="_blank" rel="noopener noreferrer">FAQ officielle JLPT</a> · <a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener noreferrer">Données OpenJLPT</a> (CC BY-SA 4.0). Les traductions françaises sont une sélection de révision. Projet indépendant.</p></footer>
 </body>
 </html>

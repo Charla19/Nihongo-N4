@@ -31,3 +31,16 @@ test('le HTML charge les données séparément et le code reste syntaxiquement v
   assert.match(js, /fetch\('\.\/data\/vocabulary\.json'/);
   new Function(js);
 });
+
+test('les fichiers nécessaires à l’installation mobile sont présents', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
+  assert.equal(manifest.display, 'standalone');
+  assert.equal(manifest.start_url, '/');
+  for (const icon of manifest.icons) {
+    const bytes = fs.readFileSync(path.join(root, icon.src.slice(1)));
+    assert.equal(bytes.toString('hex', 0, 8), '89504e470d0a1a0a');
+    const [width, height] = [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
+    assert.equal(`${width}x${height}`, icon.sizes);
+  }
+  new Function(fs.readFileSync(path.join(root, 'sw.js'), 'utf8'));
+});
