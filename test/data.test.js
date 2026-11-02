@@ -45,9 +45,9 @@ test('les fichiers nécessaires à l’installation mobile sont présents', () =
   new Function(fs.readFileSync(path.join(root, 'sw.js'), 'utf8'));
 });
 
-test('le formulaire accepte les huit chiffres des e-mails Supabase', () => {
+test('le formulaire accepte les six chiffres des e-mails Supabase', () => {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  assert.match(html, /id="account-code"[^>]*pattern="\[0-9\]\{8\}"[^>]*maxlength="8"/);
+  assert.match(html, /id="account-code"[^>]*pattern="\[0-9\]\{6\}"[^>]*maxlength="6"/);
 });
 
 test('le sitemap contient des pages canoniques avec du contenu HTML consultable', () => {

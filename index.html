@@ -161,9 +161,9 @@
             <button class="button primary account-submit" type="submit">Recevoir un code</button>
           </form>
           <form id="code-form" hidden>
-            <p>Entre le code à huit chiffres envoyé à <strong id="code-recipient"></strong>.</p>
+            <p>Entre le code à six chiffres envoyé à <strong id="code-recipient"></strong>.</p>
             <label for="account-code">Code de connexion</label>
-            <input id="account-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{8}" maxlength="8" required placeholder="00000000">
+            <input id="account-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
             <button class="button primary account-submit" type="submit">Se connecter</button>
             <button id="resend-code" type="button" class="text-button">Recevoir un nouveau code</button>
             <button id="change-email" type="button" class="text-button">Changer d’adresse</button>

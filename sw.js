@@ -1,4 +1,4 @@
-const CACHE = 'nihongo-n4-v5';
+const CACHE = 'nihongo-n4-v6';
 const CORE = [
   '/', '/index.html', '/vocabulaire', '/kanji', '/styles.css', '/cloud.js', '/learning.js', '/app.js', '/manifest.webmanifest',
   '/data/vocabulary.json', '/icons/icon.svg', '/icons/icon-192.png',

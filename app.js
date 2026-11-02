@@ -216,7 +216,7 @@ function setupAccount() {
     $('#account-email').focus();
   });
   $('#account-code').addEventListener('input', event => {
-    event.target.value = event.target.value.replace(/\D/g, '').slice(0, 8);
+    event.target.value = event.target.value.replace(/\D/g, '').slice(0, 6);
   });
   $('#resend-code').addEventListener('click', async () => {
     const button = $('#resend-code');
@@ -245,7 +245,7 @@ function setupAccount() {
       await syncProgress();
     } catch (error) {
       $('#account-message').textContent = /token has expired or is invalid/i.test(error.message || '')
-        ? 'Code invalide ou expiré. Vérifie les huit chiffres ou demande un nouveau code.'
+        ? 'Code invalide ou expiré. Vérifie les six chiffres ou demande un nouveau code.'
         : error.message || 'Impossible de vérifier le code. Réessaie.';
     } finally { button.disabled = false; }
   });

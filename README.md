@@ -16,7 +16,7 @@ Le code utilise uniquement l’URL du projet et la clé **publishable** de Supab
 
 La progression du parcours utilise la même table : `word_id` contient un identifiant de mot pour les mots enregistrés, `course:v1:seen:<id>` pour un mot découvert et `course:v1:mastered:<id>` pour une série réussie à 100 %. Aucun changement de schéma n’est nécessaire. L’état d’un quiz en cours n’est pas enregistré : après un rechargement, on reprend la série et on relance le quiz. Les identifiants de série incluent une signature de leurs mots ; si le corpus change, une série modifiée devra être validée de nouveau.
 
-Le formulaire accepte les codes à **huit chiffres** configurés dans ce projet Supabase. Si la longueur du code change dans Supabase, mettre à jour la validation et le texte dans `index.html`.
+Le formulaire accepte les codes à **six chiffres** configurés dans ce projet Supabase. La longueur se règle côté Supabase dans Authentication → Providers → Email ; elle doit correspondre au formulaire. Le modèle d’e-mail continue d’utiliser `{{ .Token }}`.
 
 ## Lancer en local
 
