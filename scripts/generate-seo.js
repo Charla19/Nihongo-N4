@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const words = JSON.parse(fs.readFileSync(path.join(root, 'data/vocabulary.json'), 'utf8')).words;
+const grammar = JSON.parse(fs.readFileSync(path.join(root, 'data/grammar.json'), 'utf8'));
 const site = 'https://nihongo.charlamasy.site';
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const write = (name, content) => fs.writeFileSync(path.join(root, name), content.trimStart() + '\n');
@@ -36,9 +37,9 @@ function document({ title, description, pathname, body }) {
 </head>
 <body>
   <a class="skip-link" href="#main">Aller au contenu</a>
-  <header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="Nihongo N4, accueil"><span class="brand-mark" aria-hidden="true">日</span><span>Nihongo<span class="brand-accent"> N4</span></span></a><nav class="seo-nav" aria-label="Navigation principale"><a href="/">Application</a><a href="/vocabulaire"${pathname === '/vocabulaire' ? ' aria-current="page"' : ''}>Vocabulaire</a><a href="/kanji"${pathname === '/kanji' ? ' aria-current="page"' : ''}>Kanji</a></nav></div></header>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="Nihongo N4, accueil"><span class="brand-mark" aria-hidden="true">日</span><span>Nihongo<span class="brand-accent"> N4</span></span></a><nav class="seo-nav" aria-label="Navigation principale"><a href="/">Application</a><a href="/vocabulaire"${pathname === '/vocabulaire' ? ' aria-current="page"' : ''}>Vocabulaire</a><a href="/grammaire"${pathname === '/grammaire' ? ' aria-current="page"' : ''}>Grammaire</a><a href="/kanji"${pathname === '/kanji' ? ' aria-current="page"' : ''}>Kanji</a></nav></div></header>
   <main id="main" class="shell seo-main">${body}</main>
-  <footer class="site-footer shell"><p class="copyright">© 2026 <a href="https://charlamasy.site" target="_blank" rel="noopener noreferrer">Charla Masy</a></p><p>Vocabulaire adapté d’<a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener noreferrer">OpenJLPT</a> (CC BY-SA 4.0). Les niveaux sont indicatifs : le JLPT ne publie pas de liste officielle exhaustive. Projet indépendant.</p></footer>
+  <footer class="site-footer shell"><p class="copyright">© 2026 <a href="https://charlamasy.site" target="_blank" rel="noopener noreferrer">Charla Masy</a></p><p>Vocabulaire et grammaire adaptés d’<a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener noreferrer">OpenJLPT</a> (CC BY-SA 4.0). Les niveaux sont indicatifs : le JLPT ne publie pas de liste officielle exhaustive. Projet indépendant.</p></footer>
 </body>
 </html>`;
 }
@@ -75,6 +76,17 @@ write('kanji.html', document({
     <p class="seo-next">Tu peux aussi <a href="/vocabulaire">parcourir les mots N4 traduits en français</a>.</p>`
 }));
 
+const grammarGroups = [...new Set(grammar.map(entry => entry.category))].map((category, index) => {
+  const entries = grammar.filter(entry => entry.category === category);
+  return `<section id="theme-${index}" class="seo-grammar-section" aria-labelledby="theme-title-${index}"><h2 id="theme-title-${index}">${escape(category)}</h2><div class="seo-grammar-grid">${entries.map(entry => `<article class="seo-grammar-card"><h3 lang="ja">${escape(entry.pattern)}</h3><p class="seo-grammar-meaning">${escape(entry.meaning)}</p><p>${escape(entry.explanation)}</p><p><strong>Construction :</strong> ${escape(entry.formation)}</p><ol>${entry.examples.map(example => `<li><span lang="ja">${escape(example.ja)}</span><span>${escape(example.fr)}</span></li>`).join('')}</ol><a href="/#grammaire/${encodeURIComponent(entry.id)}">Ouvrir la fiche dans l’application →</a></article>`).join('')}</div></section>`;
+}).join('\n');
+write('grammaire.html', document({
+  title: 'Grammaire JLPT N4 en français : formes et exemples — Nihongo N4',
+  description: `${grammar.length} points de grammaire N4 expliqués en français avec construction et exemples japonais traduits. Consulte aussi les fiches dans l’application mobile.`,
+  pathname: '/grammaire',
+  body: `<div class="seo-intro"><span class="eyebrow">GRAMMAIRE JLPT N4</span><h1>Comprendre les formes dans les phrases</h1><p>${grammar.length} points de grammaire avec leurs constructions, nuances d’usage et exemples en français. Cette base de révision n’est pas une liste officielle exhaustive du JLPT.</p><a class="button primary" href="/#grammaire">Rechercher une forme dans l’application <span aria-hidden="true">→</span></a></div>${grammarGroups}<p class="seo-next">Complète la grammaire avec <a href="/vocabulaire">le vocabulaire N4 en contexte</a>.</p>`
+}));
+
 write('robots.txt', `User-agent: *
 Allow: /
 
@@ -83,7 +95,8 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${site}/</loc></url>
   <url><loc>${site}/vocabulaire</loc></url>
+  <url><loc>${site}/grammaire</loc></url>
   <url><loc>${site}/kanji</loc></url>
 </urlset>`);
 
-console.log(`Pages SEO générées : ${translated.length} mots traduits, ${featured.length} groupes de kanji.`);
+console.log(`Pages SEO générées : ${translated.length} mots traduits, ${featured.length} groupes de kanji, ${grammar.length} points de grammaire.`);

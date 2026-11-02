@@ -65,3 +65,68 @@
 .result-missed{display:grid;gap:6px;max-height:270px;overflow:auto;margin-top:18px}.missed-word{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px}.missed-word span{color:var(--muted);text-align:right}
 #apprendre.lesson-open>.page-heading{display:none}
 @media(max-width:620px){.missed-word{display:block}.missed-word span{display:block;text-align:left}}
+
+.grammar-basics{margin:0 0 22px;border:1px solid #d8c9e8;border-radius:16px;background:#f7f3fb}
+.grammar-basics>summary{display:flex;align-items:center;min-height:56px;padding:13px 18px;color:var(--accent-dark);font-weight:800;cursor:pointer}
+.grammar-basics>summary:focus-visible,.grammar-card:focus-visible{outline:3px solid #aa86d7;outline-offset:3px}
+.grammar-basics-content{padding:0 18px 19px;color:var(--muted);font-size:14px;line-height:1.65}
+.grammar-basics-content p{margin:7px 0 15px}
+.grammar-form-table{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.grammar-form-table>div{display:grid;grid-template-columns:1.1fr repeat(3,1fr);min-width:620px;border-bottom:1px solid var(--line)}
+.grammar-form-table>div:last-child{border-bottom:0}
+.grammar-form-table>div:first-child{background:#eee6f7;color:var(--accent-dark)}
+.grammar-form-table span,.grammar-form-table strong{padding:9px 11px;line-height:1.45}
+.grammar-form-table span:first-child{color:var(--ink);font-weight:700}
+.grammar-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 230px;align-items:end;gap:12px;padding:18px;margin-bottom:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.grammar-filter{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700}
+.grammar-filter select{width:100%;min-height:52px;padding:10px 12px;border:1px solid #d4c8df;border-radius:11px;background:#fff;color:var(--ink);font:inherit}
+.grammar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grammar-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:162px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);text-align:left;transition:border-color .15s,background .15s}
+.grammar-card:hover{border-color:#a68ac7;background:#fcfaff}
+.grammar-card-category{color:var(--accent-dark);font-size:12px;font-weight:800;letter-spacing:.025em}
+.grammar-card-pattern{margin:12px 0 5px;font-size:clamp(20px,2.5vw,27px);line-height:1.3;overflow-wrap:anywhere}
+.grammar-card-meaning{color:var(--muted);font-size:14px;line-height:1.4}
+.grammar-card-action{margin-top:auto;padding-top:13px;color:var(--accent-dark);font-size:13px;font-weight:800}
+.grammar-source{margin:23px 0;color:var(--muted);font-size:13px}
+.grammar-dialog{width:min(680px,calc(100% - 32px));max-height:min(90dvh,820px);height:auto;border:1px solid #dfd3ea;border-radius:22px;background:#fff}
+.grammar-dialog-shell{display:flex;flex-direction:column;max-height:inherit}
+.grammar-dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 26px 13px;border-bottom:1px solid var(--line)}
+.grammar-dialog-header h2{margin:7px 0 0;font-size:clamp(27px,4vw,38px);line-height:1.3}
+.grammar-dialog-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:18px 26px 28px}
+.grammar-detail-meaning{margin:0 0 19px;color:var(--accent-dark);font-size:19px;font-weight:800}
+.grammar-dialog-body h3{margin:20px 0 8px;font-size:15px}
+.grammar-detail-explanation{margin:0;color:var(--muted);line-height:1.65}
+.grammar-detail-form{padding:15px;border:1px solid #ded0ed;border-radius:12px;background:#f7f3fb;color:var(--ink);font-size:15px;line-height:1.75;overflow-wrap:anywhere}
+.grammar-examples{display:grid;gap:11px;padding:0;margin:0;list-style:none}
+.grammar-examples li{padding:14px 15px;border:1px solid var(--line);border-radius:12px}
+.grammar-example-ja{margin:0 0 7px;font-size:19px;line-height:1.8}
+.grammar-example-ja rt{font-size:10px;color:var(--accent-dark)}
+.grammar-example-fr{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+@media(max-width:900px){.grammar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+  .mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .mobile-nav button{gap:3px;padding:6px 1px;font-size:10px;min-width:0}
+  .mobile-nav svg{width:20px;height:20px}
+  .grammar-grid,.grammar-toolbar{grid-template-columns:1fr}
+  .grammar-toolbar{padding:14px}
+  .grammar-card{min-height:128px;padding:16px}
+  .grammar-card-pattern{margin-top:8px}
+  .grammar-dialog{inset:0;width:100%;height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0}
+  .grammar-dialog-shell{height:100dvh;max-height:100dvh;padding-top:env(safe-area-inset-top)}
+  .grammar-dialog-header{padding:17px 18px 12px}
+  .grammar-dialog-body{padding:16px 18px calc(28px + env(safe-area-inset-bottom))}
+}
+.seo-grammar-section{margin:0 0 35px;scroll-margin-top:80px}
+.seo-grammar-section h2{margin:0 0 14px}
+.seo-grammar-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.seo-grammar-card{min-width:0;padding:19px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+.seo-grammar-card h3{margin:0 0 5px;color:var(--ink);font-size:23px;overflow-wrap:anywhere}
+.seo-grammar-card p{margin:9px 0;color:var(--muted);font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.seo-grammar-card .seo-grammar-meaning{color:var(--accent-dark);font-weight:800}
+.seo-grammar-card ol{padding-left:20px;margin:15px 0}
+.seo-grammar-card li{margin:0 0 11px;line-height:1.5}
+.seo-grammar-card li span{display:block}
+.seo-grammar-card li span:first-child{font-size:17px}
+.seo-grammar-card li span:last-child{color:var(--muted);font-size:13px}
+.seo-grammar-card a{color:var(--accent-dark);font-size:13px;font-weight:800}
+@media(max-width:620px){.seo-grammar-grid{grid-template-columns:1fr}.seo-grammar-card{padding:16px}.seo-nav{min-width:0;overflow-x:auto;white-space:nowrap}.seo-nav a{padding:7px 3px;font-size:10px}.seo-main~.site-footer{padding-bottom:30px}}

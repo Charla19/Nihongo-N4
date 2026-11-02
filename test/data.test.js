@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/vocabulary.json'), 'utf8'));
+const grammar = JSON.parse(fs.readFileSync(path.join(root, 'data/grammar.json'), 'utf8'));
 
 test('le corpus N5/N4 est complet et les IDs sont uniques', () => {
   assert.equal(data.words.length, 1304);
@@ -30,6 +31,22 @@ test('le HTML charge les données séparément et le code reste syntaxiquement v
   assert.ok(!html.includes('const DATA='));
   assert.match(js, /fetch\('\.\/data\/vocabulary\.json'/);
   new Function(js);
+  new Function(fs.readFileSync(path.join(root, 'grammar.js'), 'utf8'));
+});
+
+test('les fiches N4 ont une construction, une explication et plusieurs exemples en français', () => {
+  assert.equal(grammar.length, 98);
+  assert.equal(new Set(grammar.map(entry => entry.id)).size, grammar.length);
+  for (const entry of grammar) {
+    assert.equal(entry.level, 'N4');
+    for (const field of ['pattern', 'category', 'meaning', 'explanation', 'formation']) assert.ok(entry[field]?.length > 0, `${entry.id} : ${field}`);
+    assert.ok(entry.examples.length >= 2 && entry.examples.length <= 3);
+    for (const example of entry.examples) {
+      assert.ok(example.ja && example.furigana && example.fr, `${entry.id} : exemple incomplet`);
+    }
+  }
+  assert.match(fs.readFileSync(path.join(root, 'index.html'), 'utf8'), /data-view="grammaire"/);
+  assert.match(fs.readFileSync(path.join(root, 'sw.js'), 'utf8'), /data\/grammar\.json/);
 });
 
 test('les fichiers nécessaires à l’installation mobile sont présents', () => {
@@ -56,6 +73,7 @@ test('le sitemap contient des pages canoniques avec du contenu HTML consultable'
   for (const [route, filename, sample] of [
     ['/', 'index.html', 'Reconnais les mots'],
     ['/vocabulaire', 'vocabulaire.html', '安心'],
+    ['/grammaire', 'grammaire.html', '〜てくれる'],
     ['/kanji', 'kanji.html', '医学']
   ]) {
     const url = `https://nihongo.charlamasy.site${route}`;

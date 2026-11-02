@@ -2,9 +2,10 @@
   "name": "nihongo-n4",
   "private": true,
   "version": "1.0.0",
-  "description": "Carnet statique de vocabulaire N5/N4",
+  "description": "Carnet statique de vocabulaire et grammaire N5/N4",
   "scripts": {
     "start": "node scripts/serve.js",
+    "grammar:build": "node scripts/build-grammar.js",
     "seo:build": "node scripts/generate-seo.js",
     "test": "node --test"
   }

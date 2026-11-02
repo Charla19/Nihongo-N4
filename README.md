@@ -2,6 +2,8 @@
 
 Application statique pour apprendre et réviser les mots N5 et N4. Le parcours « Apprendre » répartit les 1 304 mots en séries d’environ 25 : les mots traduits en français d’abord, puis le reste du corpus (sens en anglais). Chaque mot se découvre sur une carte ; un quiz de quatre choix couvre ensuite toute la série. La série devient « maîtrisée » seulement après un score de 100 %. Un résultat incomplet indique les mots à revoir, puis le quiz peut être refait. Les associations de kanji se consultent dans une fiche qui s’ouvre au-dessus de la page, sans perdre sa position.
 
+L’onglet « Grammaire » donne accès à 98 points N4 répartis par thème, avec recherche en japonais ou en français. Chaque fiche explique le sens et la nuance d’usage, présente les constructions et deux ou trois exemples japonais avec furigana et traduction française. Un rappel des conjugaisons aide à décoder les formes utilisées dans les fiches. Sur mobile, la fiche s’ouvre en plein écran. La grammaire est disponible hors ligne après le premier chargement. Cette base de révision n’est pas une liste officielle exhaustive du JLPT.
+
 Le site est aussi une PWA : une fois chargé sur HTTPS, il peut être installé sur le téléphone. Les fichiers essentiels et le vocabulaire sont mis en cache pour la révision hors ligne. La progression d’un compte connecté reste utilisable hors ligne sur cet appareil et se synchronise au retour du réseau. L’icône reprend le petit `日` du logo, dans une palette violette sobre.
 
 ## Comptes et synchronisation
@@ -36,9 +38,9 @@ npm test
 
 ## Référencement
 
-`robots.txt` indique le sitemap. `sitemap.xml` contient uniquement les trois URL canoniques réellement consultables : l’accueil, `/vocabulaire` et `/kanji`. Les deux dernières sont des pages HTML avec du contenu N4 visible sans JavaScript, car les vues `#vocabulaire` et `#kanji` de l’application ne constituent pas des pages distinctes pour Google. Les pages HTML contiennent des titres, descriptions et métadonnées sociales propres. L’accueil indique son URL canonique et décrit l’application avec les données structurées `WebApplication`.
+`robots.txt` indique le sitemap. `sitemap.xml` contient les quatre URL canoniques réellement consultables : l’accueil, `/vocabulaire`, `/grammaire` et `/kanji`. Les trois dernières sont des pages HTML avec du contenu N4 visible sans JavaScript, car les vues `#vocabulaire`, `#grammaire` et `#kanji` de l’application ne constituent pas des pages distinctes pour Google. Les pages HTML contiennent des titres, descriptions et métadonnées sociales propres. L’accueil indique son URL canonique et décrit l’application avec les données structurées `WebApplication`.
 
-Après une modification du corpus, régénérer les pages et le sitemap avec `npm run seo:build` (ou `node scripts/generate-seo.js`), puis les inclure dans le commit. Après déploiement, soumettre `https://nihongo.charlamasy.site/sitemap.xml` dans Google Search Console et inspecter les trois URL. L’indexation dépend de Google et peut prendre du temps.
+Après une modification du corpus, régénérer les pages et le sitemap avec `npm run seo:build` (ou `node scripts/generate-seo.js`), puis les inclure dans le commit. Après déploiement, soumettre `https://nihongo.charlamasy.site/sitemap.xml` dans Google Search Console et inspecter les quatre URL. L’indexation dépend de Google et peut prendre du temps.
 
 ## Déployer sur Vercel
 
@@ -58,4 +60,6 @@ Le bouton d’installation apparaît uniquement lorsque le navigateur propose l�
 
 ## Sources et licence
 
-Les 1 304 entrées (674 N5 et 630 N4) proviennent de [OpenJLPT](https://github.com/evanclan/OpenJLPT), sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Les niveaux sont indicatifs : le JLPT ne publie pas de listes officielles exhaustives. Les traductions françaises prioritaires et l’interface sont adaptées pour ce projet sous CC BY-SA 4.0. Aucun exemple Tatoeba n’est repris.
+Les 1 304 entrées (674 N5 et 630 N4) et les 98 points de grammaire proviennent de [OpenJLPT](https://github.com/evanclan/OpenJLPT), sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Les niveaux sont indicatifs : le JLPT ne publie pas de listes officielles exhaustives. Les explications et exemples français sont adaptés pour ce projet sous CC BY-SA 4.0. Aucun exemple Tatoeba n’est repris.
+
+Le fichier `data/grammar-source.json` conserve le corpus original attribué à OpenJLPT ; `data/grammar-fr.js` contient l’adaptation française. `node scripts/build-grammar.js` génère `data/grammar.json`, lu par l’application et la page SEO. Après un changement du corpus grammatical, régénérer ce JSON avant `npm run seo:build`.

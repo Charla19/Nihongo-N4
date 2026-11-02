@@ -270,7 +270,7 @@ function setupAccount() {
 }
 
 function showView(name, updateHash = true) {
-  if (!['accueil', 'apprendre', 'mes-mots', 'vocabulaire', 'kanji'].includes(name)) name = 'accueil';
+  if (!['accueil', 'apprendre', 'mes-mots', 'vocabulaire', 'grammaire', 'kanji'].includes(name)) name = 'accueil';
   if (name === 'mes-mots' && !cloud.user) { openAccount(); return; }
   if (name === 'apprendre') {
     $('#apprendre').classList.remove('lesson-open');
@@ -295,6 +295,12 @@ function routeFromLocation() {
   let route;
   try { route = decodeURIComponent(location.hash.slice(1)); } catch { route = ''; }
   const [view, groupId, mode] = route.split('/');
+  if (view === 'grammaire') {
+    showView('grammaire', false);
+    if (groupId) NihongoGrammar.open(groupId, false);
+    else NihongoGrammar.close(false);
+    return;
+  }
   if (view === 'apprendre' && groupId && state.groups.length) {
     const group = state.groups.find(item => item.id === groupId);
     if (group) {
@@ -307,6 +313,7 @@ function routeFromLocation() {
     }
   }
   showView(view, false);
+  NihongoGrammar.close(false);
 }
 
 function element(tag, className, text) {
@@ -645,6 +652,7 @@ async function init() {
     }
   });
   routeFromLocation();
+  NihongoGrammar.init();
   document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
   $('.brand').addEventListener('click', event => { event.preventDefault(); showView('accueil'); });
   $('#start-button').addEventListener('click', () => showView('apprendre'));

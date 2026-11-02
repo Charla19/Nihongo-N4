@@ -7,7 +7,7 @@ const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=u
 const port = Number(process.env.PORT || 4173);
 http.createServer((req, res) => {
   const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-  const target = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname === '/vocabulaire' || pathname === '/kanji' ? pathname + '.html' : pathname));
+  const target = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : ['/vocabulaire', '/grammaire', '/kanji'].includes(pathname) ? pathname + '.html' : pathname));
   if (!target.startsWith(root + path.sep) || !mime[path.extname(target)]) { res.writeHead(404); res.end('Not found'); return; }
   fs.readFile(target, (error, bytes) => {
     if (error) { res.writeHead(404); res.end('Not found'); return; }

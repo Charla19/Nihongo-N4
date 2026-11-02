@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Nihongo N4 — révision de vocabulaire",
+  "name": "Nihongo N4 — mots et grammaire",
   "short_name": "Nihongo N4",
-  "description": "Révise les mots et les kanji utiles au JLPT N4, même hors ligne.",
+  "description": "Révise les mots, les kanji et la grammaire utiles au JLPT N4, même hors ligne.",
   "lang": "fr",
   "start_url": "/",
   "scope": "/",
